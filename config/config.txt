@@ -25,9 +25,9 @@
 #interval	= 5
 
 ######Failure related parameters
-######The Task Failure Rate for level 1
+######The utils.Task Failure Rate for level 1
 #a1		= 0.02
-######The Task Failure Rate for level 2
+######The utils.Task Failure Rate for level 2
 #a2		= 0.02
 ######Fault tolerant clustering method
 #ftc.method	= FTCLUSTERING_DC

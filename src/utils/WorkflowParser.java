@@ -1,4 +1,5 @@
-import org.cloudbus.cloudsim.Cloudlet;
+package utils;
+
 import org.cloudbus.cloudsim.Log;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -11,7 +12,7 @@ import java.util.*;
 
 public class WorkflowParser {
 
-    private String daxPath;
+    private final String daxPath;
     /**
      * All tasks.
      */
@@ -19,7 +20,7 @@ public class WorkflowParser {
     /**
      * User id. used to create a new task.
      */
-    private int userId;
+    private final int userId;
 
     /**
      * The scale of runtime. Multiple runtime by this
@@ -49,7 +50,7 @@ public class WorkflowParser {
         this.mName2Task = new HashMap<>();
         this.daxPath = daxPath;
 //        this.daxPaths = getDAXPaths();
-        this.jobIdStartsFrom = 1;
+        this.jobIdStartsFrom = 0;
 
         setTaskList(new ArrayList<>());
     }
@@ -227,7 +228,7 @@ public class WorkflowParser {
                 Task task = (Task) it.next();
                 setDepth(task, 1);
             }
-            /**
+            /*
              * Clean them so as to save memory. Parsing workflow may take much
              * memory
              */

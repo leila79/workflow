@@ -15,8 +15,8 @@ import org.cloudbus.cloudsim.UtilizationModelFull;
 import org.cloudbus.cloudsim.core.CloudSim;
 
 /**
- * WorkflowApp is an example of AppCloudlet having three communicating tasks. Task A and B sends the
- * data (packet) while Task C receives them
+ * WorkflowApp is an example of AppCloudlet having three communicating tasks. utils.Task A and B sends the
+ * data (packet) while utils.Task C receives them
  * 
  * Please refer to following publication for more details:
  * 
@@ -42,7 +42,7 @@ public class WorkflowApp extends AppCloudlet {
 		int memory = 100;
 		UtilizationModel utilizationModel = new UtilizationModelFull();
 		int i = 0;
-		// Task A
+		// utils.Task A
 		NetworkCloudlet cl = new NetworkCloudlet(
 				NetworkConstants.currentCloudletId,
 				0,
@@ -67,7 +67,7 @@ public class WorkflowApp extends AppCloudlet {
 				.getCloudletId() + 2));
 		clist.add(cl);
 		i++;
-		// Task B
+		// utils.Task B
 		NetworkCloudlet clb = new NetworkCloudlet(
 				NetworkConstants.currentCloudletId,
 				0,
@@ -100,7 +100,7 @@ public class WorkflowApp extends AppCloudlet {
 		clist.add(clb);
 		i++;
 
-		// Task C
+		// utils.Task C
 		NetworkCloudlet clc = new NetworkCloudlet(
 				NetworkConstants.currentCloudletId,
 				0,

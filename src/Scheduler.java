@@ -1,8 +1,5 @@
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import FCFS.FCFSBroker;
 import LJF.LJFBroker;
@@ -36,7 +33,7 @@ public class Scheduler {
 
 			// Third step: Create Broker
 			DatacenterBroker broker = createMyBroker("My_Broker",
-					"E:\\workflowsim\\config\\dax\\Montage_500_1.xml", WorkflowType.MONTAGE, SchedulerType.FCFS);
+					"E:\\workflowsim\\config\\dax\\Genome_500_1.xml", WorkflowType.EPIGENOMICS, SchedulerType.LJF);
 
 
 			// Sixth step: Starts the simulation
@@ -45,6 +42,10 @@ public class Scheduler {
 			List<Cloudlet> newList = broker.getCloudletReceivedList();
 
 			CloudSim.stopSimulation();
+
+			Collections.sort(newList, (t1, t2) ->
+					Double.compare(t2.getExecStartTime(), t1.getExecStartTime()));
+			Collections.reverse(newList);
 
 			printCloudletList(newList);
 

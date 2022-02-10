@@ -19,6 +19,8 @@ public class FCFSBroker extends DatacenterBroker {
 
 	private List<Task> cloudletList;
 
+	private List<Integer> busyVms;
+
 	private String daxPath;
 
 	WorkflowType workflowType;
@@ -27,6 +29,7 @@ public class FCFSBroker extends DatacenterBroker {
 		super(name);
 		this.daxPath = daxPath;
 		this.workflowType = workflowType;
+		busyVms = new ArrayList<>();
 	}
 
 	@Override
@@ -54,7 +57,8 @@ public class FCFSBroker extends DatacenterBroker {
 		int mips3 = 1500;
 		long bw = 1000;
 		int nw = 500;
-		int vms = (int) Math.ceil(nw / (10 * dw));
+		int vms = (int) Math.ceil(nw / (10.0 * dw));
+//		vms = 9;
 		int pesNumber = 1; //number of cpus
 		String vmm = "Xen"; //VMM name
 		List<Vm> vmList  = new ArrayList<>();
@@ -179,6 +183,14 @@ public class FCFSBroker extends DatacenterBroker {
 			}
 		}
 		for (Cloudlet cloudlet : ReadyTasks) {
+
+			for (int i = 0; i < getVmsCreatedList().size(); i++){
+				if (!busyVms.contains(i)){
+					vmIndex = i;
+					break;
+				}
+			}
+
 			Vm vm;
 			// if user didn't bind this cloudlet and it has not been executed yet
 			if (cloudlet.getVmId() == -1) {
@@ -197,6 +209,7 @@ public class FCFSBroker extends DatacenterBroker {
 			cloudlet.setVmId(vm.getId());
 			sendNow(getVmsToDatacentersMap().get(vm.getId()), CloudSimTags.CLOUDLET_SUBMIT, cloudlet);
 			cloudletsSubmitted++;
+			busyVms.add(vmIndex);
 			vmIndex = (vmIndex + 1) % getVmsCreatedList().size();
 			getCloudletSubmittedList().add(cloudlet);
 		}
@@ -210,6 +223,7 @@ public class FCFSBroker extends DatacenterBroker {
 	protected void processCloudletReturn(SimEvent ev) {
 		Cloudlet cloudlet = (Cloudlet) ev.getData();
 		getCloudletReceivedList().add(cloudlet);
+		busyVms.remove(busyVms.indexOf(cloudlet.getVmId()));
 		Log.printLine(CloudSim.clock() + ": " + getName() + ": Cloudlet " + cloudlet.getCloudletId()
 				+ " received");
 		cloudletsSubmitted--;
@@ -218,7 +232,7 @@ public class FCFSBroker extends DatacenterBroker {
 			clearDatacenters();
 			finishExecution();
 		} else { // some cloudlets haven't finished yet
-			if (getCloudletList().size() > 0 && cloudletsSubmitted == 0) {
+			if (getCloudletList().size() > 0) {
 				// all the cloudlets sent finished. It means that some bount
 				// cloudlet is waiting its VM be created
 				submitCloudlets();

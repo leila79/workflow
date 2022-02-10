@@ -312,15 +312,13 @@ public class Task extends Cloudlet {
     public double getProcessingCost() {
         // cloudlet cost: execution cost...
 
-        double cost = getCostPerSec() * getActualCPUTime();
-
-        // ...plus input data transfer cost...
-        long fileSize = 0;
-        for (FileItem file : getFileList()) {
-            fileSize += file.getSize() / Consts.MILLION;
-        }
-        cost += costPerBw * fileSize;
-        return cost;
+        //        // ...plus input data transfer cost...
+//        long fileSize = 0;
+//        for (FileItem file : getFileList()) {
+//            fileSize += file.getSize() / Consts.MILLION;
+//        }
+//        cost += costPerBw * fileSize;
+        return getCostPerSec() * getActualCPUTime();
     }
 
 

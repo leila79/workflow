@@ -59,7 +59,7 @@ public class FCFSBroker extends DatacenterBroker {
 		String vmm = "Xen"; //VMM name
 		List<Vm> vmList  = new ArrayList<>();
 		for (int i = 0; i < vms; i++) {
-			Vm vm = new Vm(i, getId(), mips1, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
+			Vm vm = new Vm(i, getId(), mips3, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
 			vmList.add(vm);
 //			sendNow(datacenterId, CloudSimTags.VM_CREATE_ACK, vm);
 		}
@@ -69,7 +69,7 @@ public class FCFSBroker extends DatacenterBroker {
 //			sendNow(datacenterId, CloudSimTags.VM_CREATE_ACK, vm);
 		}
 		for (int i = 2 * vms; i < 3 * vms; i++) {
-			Vm vm = new Vm(i, getId(), mips3, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
+			Vm vm = new Vm(i, getId(), mips1, pesNumber, ram, bw, size, vmm, new CloudletSchedulerTimeShared());
 			vmList.add(vm);
 //			sendNow(datacenterId, CloudSimTags.VM_CREATE_ACK, vm);
 		}

@@ -1,39 +1,22 @@
-package FCFS;
-
-
-/*
- * Title:        CloudSim Toolkit
- * Description:  CloudSim (Cloud Simulation) Toolkit for Modeling and Simulation
- *               of Clouds
- * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
- *
- * Copyright (c) 2009, The University of Melbourne, Australia
- */
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
+import FCFS.FCFSBroker;
+import LJF.LJFBroker;
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
+import utils.SchedulerType;
 import utils.WorkflowType;
 
-/**
- * A simple example showing how to create a data center with one host and run one cloudlet on it.
- */
-public class FCFSScheduler {
 
+public class Scheduler {
 
-	/**
-	 * Creates main() to run this example.
-	 *
-	 * @param args the args
-	 */
 	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		Log.printLine("Starting CloudSimExample1...");
@@ -53,7 +36,7 @@ public class FCFSScheduler {
 
 			// Third step: Create Broker
 			DatacenterBroker broker = createMyBroker("My_Broker",
-					"E:\\workflowsim\\config\\dax\\Montage_25.xml", WorkflowType.MONTAGE);
+					"E:\\workflowsim\\config\\dax\\Montage_500_1.xml", WorkflowType.MONTAGE, SchedulerType.FCFS);
 
 
 			// Sixth step: Starts the simulation
@@ -90,7 +73,7 @@ public class FCFSScheduler {
 		// In this example, it will have only one core.
 		List<Pe> peList = new ArrayList<Pe>();
 
-		int mips = 10000;
+		int mips = 100000000;
 
 		// 3. Create PEs and add these into a list.
 		peList.add(new Pe(0, new PeProvisionerSimple(mips))); // need to store Pe id and MIPS Rating
@@ -184,10 +167,15 @@ public class FCFSScheduler {
 	 *
 	 * @return the datacenter broker
 	 */
-	private static DatacenterBroker createMyBroker(String name, String path, WorkflowType workflowType) {
+	private static DatacenterBroker createMyBroker(String name, String path, WorkflowType workflowType, SchedulerType schedulerType) {
 		DatacenterBroker broker = null;
 		try {
-			broker = new FCFSBroker(name, path, workflowType);
+			switch (schedulerType){
+				case FCFS -> broker = new FCFSBroker(name, path, workflowType);
+				case LJF -> broker = new LJFBroker(name, path, workflowType);
+				case PCP -> broker = new FCFSBroker(name, path, workflowType);
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

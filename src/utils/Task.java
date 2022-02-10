@@ -1,12 +1,12 @@
 package utils; /**
  * Copyright 2012-2013 University Of Southern California
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,7 +15,6 @@ package utils; /**
  */
 
 import org.cloudbus.cloudsim.Cloudlet;
-import org.cloudbus.cloudsim.Consts;
 import org.cloudbus.cloudsim.UtilizationModelFull;
 
 import java.util.ArrayList;
@@ -35,11 +34,21 @@ import java.util.List;
 public class Task extends Cloudlet {
 
     /*
-     * The list of parent tasks. 
+     * parent with the longest runtime + this.runtime.
+     */
+    private long criticalRuntime;
+
+    /*
+     * parent with the longest runtime.
+     */
+    private Task criticalParent;
+
+    /*
+     * The list of parent tasks.
      */
     private List<Task> parentList;
     /*
-     * The list of child tasks. 
+     * The list of child tasks.
      */
     private List<Task> childList;
     /*
@@ -47,22 +56,22 @@ public class Task extends Cloudlet {
      */
     private List<FileItem> fileList;
     /*
-     * The priority used for research. Not used in current version. 
+     * The priority used for research. Not used in current version.
      */
     private int priority;
     /*
-     * The depth of this task. Depth of a task is defined as the furthest path 
-     * from the root task to this task. It is set during the workflow parsing 
-     * stage. 
+     * The depth of this task. Depth of a task is defined as the furthest path
+     * from the root task to this task. It is set during the workflow parsing
+     * stage.
      */
     private int depth;
     /*
-     * The impact of a task. It is used in research. 
+     * The impact of a task. It is used in research.
      */
     private double impact;
 
     /*
-     * The type of a task. 
+     * The type of a task.
      */
     private String type;
 
@@ -319,6 +328,32 @@ public class Task extends Cloudlet {
 //        }
 //        cost += costPerBw * fileSize;
         return getCostPerSec() * getActualCPUTime();
+    }
+
+    public float getCriticalRuntime() {
+        return criticalRuntime;
+    }
+
+    public void setCriticalRuntime(long criticalRuntime) {
+        this.criticalRuntime = criticalRuntime;
+    }
+
+    public Task getCriticalParent(List<Task> tasks) {
+        long maxParentRuntime = 0;
+        Task criticalParent = null;
+        for (Task parent : this.getParentList()) {
+            if (tasks.contains(parent) && parent.getCloudletLength() + this.getCloudletLength() > maxParentRuntime) {
+                maxParentRuntime = parent.getCloudletLength() + this.getCloudletLength();
+                criticalParent = parent;
+            }
+        }
+        this.criticalRuntime = maxParentRuntime;
+        this.criticalParent = criticalParent;
+        return this.criticalParent;
+    }
+
+    public void setCriticalParent(Task criticalParent) {
+        this.criticalParent = criticalParent;
     }
 
 
